@@ -38,7 +38,7 @@ class SubmarinoFlightsCrawler:
     def _click_first_result(self):
         first_item_xpath = '//div[@class="resultado"]/ul/li/div[@class="item"]'
         try:
-            self.wait_for_element(By.XPATH, first_item_xpath)
+            self.wait_for_element(By.XPATH, first_item_xpath, 15)
         except TimeoutException:
             raise
         self.driver.find_element_by_xpath(first_item_xpath).click()
