@@ -16,6 +16,7 @@ class SubmarinoFlightsCrawler:
         self.driver = Driver(headless=headless).get_driver()
         self._get_page()
         self.date_clicked = False
+        self.month_element_selected = None
 
     def wait_for_element(self, condition, value, timeout=5):
         return WebDriverWait(
@@ -59,21 +60,37 @@ class SubmarinoFlightsCrawler:
         next_month_xpath = '//*[@aria-label="Move forward to switch to the next month."]'
         self.driver.find_element_by_xpath(next_month_xpath).click()
 
-    def _get_first_months(self):
+    def _get_first_months(self, number=None):
+        elements = self.driver.find_elements_by_xpath(
+            '//div[@class="CalendarMonth CalendarMonth_1"]'
+        )
+        return elements[number] if number else elements[:2]
+
+    def _get_first_months_caption(self):
         return self.driver.find_elements_by_xpath(
             '//div[@class="CalendarMonth CalendarMonth_1"]/'
             'div[@class="CalendarMonth_caption CalendarMonth_caption_1"]'
-        )[:2]
+        )
 
-    def find_month(self, month, year):
+    def _find_month(self, month, year):
         if not self.date_clicked:
             self._click_date_input()
         time.sleep(1)
         desired_month = f'{month} {int(year)}'.upper()
-        elements = self._get_first_months()
-        for element in elements:
+        elements = self._get_first_months_caption()
+        for number, element in enumerate(elements):
             if element.text and element.text.strip() == desired_month:
+                self.month_element_selected = number
                 break
         else:
             self._click_next_month()
-            self.find_month(month, year)
+            self._find_month(month, year)
+
+    def _click_day(self, day):
+        month_element = self._get_first_months(self.month_element_selected)
+        month_element.find_element_by_xpath(f'.//*[text() = "{day}"]').click()
+        return month_element
+
+    def select_date(self, year, month, day):
+        self._find_month(month=month, year=year)
+        self._click_day(day)
