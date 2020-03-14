@@ -15,13 +15,14 @@ class SubmarinoFlightsCrawler:
         self.url = url
         self.driver = Driver(headless=headless).get_driver()
         self._get_page()
+        self.date_clicked = False
 
     def wait_for_element(self, condition, value, timeout=5):
         return WebDriverWait(
             driver=self.driver,
             timeout=timeout,
         ).until(expected_conditions.presence_of_element_located(
-            (condition, value,)
+            (condition, value)
         ))
 
     def _get_page(self):
@@ -52,17 +53,24 @@ class SubmarinoFlightsCrawler:
         self.driver.find_element_by_xpath(
             '//div[@class="motor"]/div[@class="data"]'
         ).click()
+        self.date_clicked = True
 
     def _click_next_month(self):
         next_month_xpath = '//*[@aria-label="Move forward to switch to the next month."]'
         self.driver.find_element_by_xpath(next_month_xpath).click()
 
-    def find_month(self, month, year):
-        time.sleep(1)
-        elements = self.driver.find_elements_by_xpath(
-            '//div[@class="CalendarMonth CalendarMonth_1"]/div[@class="CalendarMonth_caption CalendarMonth_caption_1"]'
+    def _get_first_months(self):
+        return self.driver.find_elements_by_xpath(
+            '//div[@class="CalendarMonth CalendarMonth_1"]/'
+            'div[@class="CalendarMonth_caption CalendarMonth_caption_1"]'
         )[:2]
+
+    def find_month(self, month, year):
+        if not self.date_clicked:
+            self._click_date_input()
+        time.sleep(1)
         desired_month = f'{month} {int(year)}'.upper()
+        elements = self._get_first_months()
         for element in elements:
             if element.text and element.text.strip() == desired_month:
                 break
