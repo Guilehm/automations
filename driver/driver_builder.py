@@ -24,6 +24,7 @@ class Driver:
     def _get_options(self):
         chrome_options = Options()
         chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--window-size=1500,900')
         if self.user_agent:
             chrome_options.add_argument(f'user-agent={self.user_agent}')
         if GOOGLE_CHROME_BIN:
