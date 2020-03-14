@@ -27,7 +27,11 @@ class SubmarinoFlightsCrawler:
         self.driver.get(self.url)
 
     def _fill_airport_input(self, airport_code, target):
-        self.driver.find_element_by_xpath(f'//div[@class="{target or "destino"}"]/p[@class="cidade"]').click()
+        if target not in 'origem destino'.split():
+            raise Exception('Target not valid')
+        self.driver.find_element_by_xpath(
+            f'//div[@class="{target or "destino"}"]/p[@class="cidade"]'
+        ).click()
         origin_input = self.driver.find_element_by_id('pesqinc')
         origin_input.send_keys(airport_code)
 
