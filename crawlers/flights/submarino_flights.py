@@ -1,3 +1,4 @@
+import time
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
@@ -46,3 +47,25 @@ class SubmarinoFlightsCrawler:
     def set_airport(self, airport_code='CGH', target='origem'):
         self._fill_airport_input(airport_code, target)
         self._click_first_result()
+
+    def _click_date_input(self):
+        self.driver.find_element_by_xpath(
+            '//div[@class="motor"]/div[@class="data"]'
+        ).click()
+
+    def _click_next_month(self):
+        next_month_xpath = '//*[@aria-label="Move forward to switch to the next month."]'
+        self.driver.find_element_by_xpath(next_month_xpath).click()
+
+    def find_month(self, month, year):
+        time.sleep(1)
+        elements = self.driver.find_elements_by_xpath(
+            '//div[@class="CalendarMonth CalendarMonth_1"]/div[@class="CalendarMonth_caption CalendarMonth_caption_1"]'
+        )[:2]
+        desired_month = f'{month} {int(year)}'.upper()
+        for element in elements:
+            if element.text and element.text.strip() == desired_month:
+                break
+        else:
+            self._click_next_month()
+            self.find_month(month, year)
