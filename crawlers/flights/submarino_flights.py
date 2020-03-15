@@ -120,4 +120,4 @@ class SubmarinoFlightsCrawler:
 c = SubmarinoFlightsCrawler()
 c.set_airport('GRU')
 c.set_airport('PNT', 'destino')
-c.search_results('2020-agosto-12', '2020-dezembro-12')
+c.search_results('2020-08-12', '2021-01-12')
