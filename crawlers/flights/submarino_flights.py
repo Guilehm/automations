@@ -104,8 +104,8 @@ class SubmarinoFlightsCrawler:
         self.driver.find_element_by_xpath('//button[@class="btn-text btn-buscar"]').click()
 
     def search_results(self, going_date, returning_date=None):
-        g_year, g_month, g_day = going_date.split('-')
-        r_year, r_month, r_day = returning_date.split('-')
+        g_year, g_month, g_day = get_date(going_date)
+        r_year, r_month, r_day = get_date(returning_date)
         self._find_month(month=g_month, year=g_year)
         self._click_day(g_day)
         if g_month == r_month and g_year == r_year:
