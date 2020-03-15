@@ -1,12 +1,13 @@
 import time
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
-from driver.driver_builder import Driver
 from crawlers.flights.utils import get_date
+from driver.driver_builder import Driver
 
 BASE_URL = 'https://www.submarinoviagens.com.br'
 
@@ -102,6 +103,10 @@ class SubmarinoFlightsCrawler:
     def _search(self):
         time.sleep(0.5)
         self.driver.find_element_by_xpath('//button[@class="btn-text btn-buscar"]').click()
+
+    def _set_only_going(self):
+        element = self.driver.find_element_by_xpath('//div[@class="menu-motor-aero"]/div[@class="item"]')
+        ActionChains(self.driver).move_to_element_with_offset(element, 10, 10).click().perform()
 
     def search_results(self, going_date, returning_date=None):
         g_year, g_month, g_day = get_date(going_date)
