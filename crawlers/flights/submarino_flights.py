@@ -129,8 +129,25 @@ class SubmarinoFlightsCrawler:
         self._click_apply_date()
         self._search()
 
+    def get_card_data(self):
+        def _parse_card_data(card):
+            return dict(
+                departure_time=card.find_element_by_xpath(
+                    './/div[@class="horario mobile"]//h3[@class="hora"]'
+                ).get_attribute('innerHTML')
+            )
+
+        cards_xpath = '//div[@class="card-aereo-content"]'
+        try:
+            self.wait_for_element(By.XPATH, cards_xpath, 30)
+        except TimeoutException:
+            raise
+        cards = self.driver.find_elements_by_xpath(cards_xpath)
+        return [_parse_card_data(card) for card in cards]
 
 c = SubmarinoFlightsCrawler()
-c.set_airport('GRU', 'PNT')
-# c.search_results('2020-06-12', '2020-09-12')
-c.search_results('2020-06-12')
+c.set_airport('RAO', 'CGH')
+c.search_results('2020-06-12', '2020-09-12')
+# c.search_results('2020-06-12')
+c.get_card_data()
+c.get_checkout_data()
