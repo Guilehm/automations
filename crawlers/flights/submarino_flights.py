@@ -17,6 +17,7 @@ class SubmarinoFlightsCrawler:
         self._get_page()
         self.date_clicked = False
         self.month_element_selected = None
+        self.desired_month = None
 
     def wait_for_element(self, condition, value, timeout=5):
         return WebDriverWait(
@@ -91,6 +92,21 @@ class SubmarinoFlightsCrawler:
         month_element.find_element_by_xpath(f'.//*[text() = "{day}"]').click()
         return month_element
 
-    def select_date(self, year, month, day):
-        self._find_month(month=month, year=year)
-        self._click_day(day)
+    def _click_apply_date(self):
+        self.driver.find_element_by_xpath('//button[@class="btn-web-apply"]').click()
+
+    def _search(self):
+        self.driver.find_element_by_xpath('//button[@class="btn-text btn-buscar"]').click()
+
+    def select_dates(self, going_date, returning_date=None):
+        g_year, g_month, g_day = going_date.split('-')
+        r_year, r_month, r_day = returning_date.split('-')
+        self._find_month(month=g_month, year=g_year)
+        self._click_day(g_day)
+        if g_month == r_month and g_year == r_year:
+            self._click_day(r_day)
+        else:
+            self._find_month(month=r_month, year=r_year)
+            self._click_day(r_day)
+        self._click_apply_date()
+        self._search()
