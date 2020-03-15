@@ -50,10 +50,17 @@ class SubmarinoFlightsCrawler:
             raise
         self.driver.find_element_by_xpath(first_item_xpath).click()
 
-    def set_airport(self, airport_code='CGH', target='origem'):
-        time.sleep(0.5)
-        self._fill_airport_input(airport_code, target)
-        self._click_first_result()
+    def set_airport(self, *airports):
+        targets = {
+            0: 'origem',
+            1: 'destino',
+        }
+        if len(airports) == 1:
+            self._set_only_going()
+        for number, code in enumerate(airports[:2]):
+            time.sleep(0.5)
+            self._fill_airport_input(code, targets.get(number))
+            self._click_first_result()
 
     def _click_date_input(self):
         self.driver.find_element_by_xpath(
