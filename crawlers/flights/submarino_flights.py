@@ -48,6 +48,7 @@ class SubmarinoFlightsCrawler:
         self.driver.find_element_by_xpath(first_item_xpath).click()
 
     def set_airport(self, airport_code='CGH', target='origem'):
+        time.sleep(0.5)
         self._fill_airport_input(airport_code, target)
         self._click_first_result()
 
@@ -59,6 +60,7 @@ class SubmarinoFlightsCrawler:
 
     def _click_next_month(self):
         next_month_xpath = '//*[@aria-label="Move forward to switch to the next month."]'
+        self.wait_for_element(By.XPATH, next_month_xpath)
         self.driver.find_element_by_xpath(next_month_xpath).click()
 
     def _get_first_months(self, number=None):
@@ -96,9 +98,10 @@ class SubmarinoFlightsCrawler:
         self.driver.find_element_by_xpath('//button[@class="btn-web-apply"]').click()
 
     def _search(self):
+        time.sleep(0.5)
         self.driver.find_element_by_xpath('//button[@class="btn-text btn-buscar"]').click()
 
-    def select_dates(self, going_date, returning_date=None):
+    def search_results(self, going_date, returning_date=None):
         g_year, g_month, g_day = going_date.split('-')
         r_year, r_month, r_day = returning_date.split('-')
         self._find_month(month=g_month, year=g_year)
@@ -110,3 +113,9 @@ class SubmarinoFlightsCrawler:
             self._click_day(r_day)
         self._click_apply_date()
         self._search()
+
+
+c = SubmarinoFlightsCrawler()
+c.set_airport('GRU')
+c.set_airport('PNT', 'destino')
+c.search_results('2020-agosto-12', '2020-dezembro-12')
