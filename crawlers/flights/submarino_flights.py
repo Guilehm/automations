@@ -145,6 +145,22 @@ class SubmarinoFlightsCrawler:
         cards = self.driver.find_elements_by_xpath(cards_xpath)
         return [_parse_card_data(card) for card in cards]
 
+    def get_checkout_data(self):
+        def _parse_checkout_data(checkout):
+            # TODO: parse price
+            return dict(
+                passengers=checkout.find_element_by_xpath('./div/p[@class="qtd-passageiros"]').text,
+                price=checkout.find_element_by_xpath('./div/p[@class="valor-total"]').text,
+            )
+        checkouts_xpath = '//div[@class="total-checkout"]'
+        try:
+            self.wait_for_element(By.XPATH, checkouts_xpath, 30)
+        except TimeoutException:
+            raise
+        checkouts = self.driver.find_elements_by_xpath(checkouts_xpath)
+        return [_parse_checkout_data(checkout) for checkout in checkouts]
+
+
 c = SubmarinoFlightsCrawler()
 c.set_airport('RAO', 'CGH')
 c.search_results('2020-06-12', '2020-09-12')
