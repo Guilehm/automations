@@ -50,10 +50,15 @@ class SubmarinoFlightsCrawler:
             raise
         self.driver.find_element_by_xpath(first_item_xpath).click()
 
-    def set_airport(self, airport_code='CGH', target='origem'):
-        time.sleep(0.5)
-        self._fill_airport_input(airport_code, target)
-        self._click_first_result()
+    def set_airport(self, *airports):
+        targets = {
+            0: 'origem',
+            1: 'destino',
+        }
+        for number, code in enumerate(airports[:2]):
+            time.sleep(0.5)
+            self._fill_airport_input(code, targets.get(number))
+            self._click_first_result()
 
     def _click_date_input(self):
         self.driver.find_element_by_xpath(
@@ -109,20 +114,23 @@ class SubmarinoFlightsCrawler:
         ActionChains(self.driver).move_to_element_with_offset(element, 10, 10).click().perform()
 
     def search_results(self, going_date, returning_date=None):
+        if not returning_date:
+            self._set_only_going()
         g_year, g_month, g_day = get_date(going_date)
-        r_year, r_month, r_day = get_date(returning_date)
         self._find_month(month=g_month, year=g_year)
         self._click_day(g_day)
-        if g_month == r_month and g_year == r_year:
-            self._click_day(r_day)
-        else:
-            self._find_month(month=r_month, year=r_year)
-            self._click_day(r_day)
+        if returning_date:
+            r_year, r_month, r_day = get_date(returning_date)
+            if g_month == r_month and g_year == r_year:
+                self._click_day(r_day)
+            else:
+                self._find_month(month=r_month, year=r_year)
+                self._click_day(r_day)
         self._click_apply_date()
         self._search()
 
 
 c = SubmarinoFlightsCrawler()
-c.set_airport('GRU')
-c.set_airport('PNT', 'destino')
-c.search_results('2020-08-12', '2021-01-12')
+c.set_airport('GRU', 'PNT')
+# c.search_results('2020-06-12', '2020-09-12')
+c.search_results('2020-06-12')
