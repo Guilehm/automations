@@ -6,8 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
-from driver.driver_builder import Driver
 from crawlers.flights.utils import get_date
+from driver.driver_builder import Driver
 
 BASE_URL = 'https://www.submarinoviagens.com.br'
 
