@@ -133,8 +133,11 @@ class SubmarinoFlightsCrawler:
         def _parse_card_data(card):
             return dict(
                 departure_time=card.find_element_by_xpath(
-                    './/div[@class="horario mobile"]//h3[@class="hora"]'
-                ).get_attribute('innerHTML')
+                    './/div[@class="horario mobile"]/div[@class="partida"]//h3[@class="hora"]'
+                ).get_attribute('innerHTML'),
+                arrival_time=card.find_element_by_xpath(
+                    './/div[@class="horario mobile"]/div[@class="chegada"]//h3[@class="hora"]'
+                ).get_attribute('innerHTML'),
             )
 
         cards_xpath = '//div[@class="card-aereo-content"]'
@@ -143,7 +146,7 @@ class SubmarinoFlightsCrawler:
         except TimeoutException:
             raise
         cards = self.driver.find_elements_by_xpath(cards_xpath)
-        return [_parse_card_data(card) for card in cards]
+        return (_parse_card_data(card) for card in cards)
 
     def get_checkout_data(self):
         def _parse_checkout_data(checkout):
@@ -158,7 +161,7 @@ class SubmarinoFlightsCrawler:
         except TimeoutException:
             raise
         checkouts = self.driver.find_elements_by_xpath(checkouts_xpath)
-        return [_parse_checkout_data(checkout) for checkout in checkouts]
+        return (_parse_checkout_data(checkout) for checkout in checkouts)
 
 
 c = SubmarinoFlightsCrawler()
