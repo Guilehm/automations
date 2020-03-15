@@ -16,10 +16,10 @@ class SubmarinoFlightsCrawler:
     def __init__(self, headless=False, url=BASE_URL):
         self.url = url
         self.driver = Driver(headless=headless).get_driver()
-        self._get_page()
         self.date_clicked = False
         self.month_element_selected = None
         self.desired_month = None
+        self._get_page()
 
     def wait_for_element(self, condition, value, timeout=5):
         return WebDriverWait(
