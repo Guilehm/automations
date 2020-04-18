@@ -134,17 +134,21 @@ class SubmarinoFlightsCrawler:
     def get_card_data(self):
         def _parse_card_data(card):
             times = card.find_elements_by_xpath('.//div[@class="c56"]/span[@class="c58"]')
-            g_departure_time, g_arrival_time, r_departure_time, r_arrival_time = times
-            return dict(
-                going=dict(
-                    departureTime=g_departure_time.text,
-                    arrivalTime=g_arrival_time.text,
-                ),
-                returning=dict(
+            r_departure_time, r_arrival_time = None, None
+            if not self.only_going:
+                g_departure_time, g_arrival_time, r_departure_time, r_arrival_time = times
+            else:
+                g_departure_time, g_arrival_time = times
+            card_data = dict(going=dict(
+                departureTime=g_departure_time.text,
+                arrivalTime=g_arrival_time.text,
+            ))
+            if not self.only_going:
+                card_data.update(returning=dict(
                     departureTime=r_departure_time.text,
                     arrivalTime=r_arrival_time.text,
-                ),
-            )
+                ))
+            return card_data
 
         cards_xpath = '//div[@class="c16"]/div[@class="c18 c19"]'
         try:
