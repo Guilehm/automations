@@ -140,11 +140,11 @@ class SubmarinoFlightsCrawler:
                 ).get_attribute('innerHTML'),
             )
 
-        cards_xpath = '//div[@class="card-aereo-content"]'
+        cards_xpath = '//div/[@class="c16"]/div[@class="c18 c19"]'
         try:
             self.wait_for_element(By.XPATH, cards_xpath, 30)
         except TimeoutException:
-            raise
+            raise TimeoutException(f'Could not find xpath: {cards_xpath}')
         cards = self.driver.find_elements_by_xpath(cards_xpath)
         return (_parse_card_data(card) for card in cards)
 
