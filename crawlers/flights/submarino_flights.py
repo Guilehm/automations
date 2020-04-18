@@ -131,16 +131,20 @@ class SubmarinoFlightsCrawler:
 
     def get_card_data(self):
         def _parse_card_data(card):
+            times = card.find_elements_by_xpath('.//div[@class="c56"]/span[@class="c58"]')
+            g_departure_time, g_arrival_time, r_departure_time, r_arrival_time = times
             return dict(
-                departure_time=card.find_element_by_xpath(
-                    './/div[@class="horario mobile"]/div[@class="partida"]//h3[@class="hora"]'
-                ).get_attribute('innerHTML'),
-                arrival_time=card.find_element_by_xpath(
-                    './/div[@class="horario mobile"]/div[@class="chegada"]//h3[@class="hora"]'
-                ).get_attribute('innerHTML'),
+                going=dict(
+                    departureTime=g_departure_time.text,
+                    arrivalTime=g_arrival_time.text,
+                ),
+                returning=dict(
+                    departureTime=r_departure_time.text,
+                    arrivalTime=r_arrival_time.text,
+                ),
             )
 
-        cards_xpath = '//div/[@class="c16"]/div[@class="c18 c19"]'
+        cards_xpath = '//div[@class="c16"]/div[@class="c18 c19"]'
         try:
             self.wait_for_element(By.XPATH, cards_xpath, 30)
         except TimeoutException:
