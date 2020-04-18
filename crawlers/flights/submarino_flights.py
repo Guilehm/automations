@@ -20,6 +20,7 @@ class SubmarinoFlightsCrawler:
         self.date_clicked = False
         self.month_element_selected = None
         self.desired_month = None
+        self.only_going = False
         self._get_page()
 
     def wait_for_element(self, condition, value, timeout=5):
@@ -112,6 +113,7 @@ class SubmarinoFlightsCrawler:
     def _set_only_going(self):
         element = self.driver.find_element_by_xpath('//div[@class="menu-motor-aero"]/div[@class="item"]')
         ActionChains(self.driver).move_to_element_with_offset(element, 10, 10).click().perform()
+        self.only_going = True
 
     def search_results(self, going_date, returning_date=None):
         if not returning_date:
