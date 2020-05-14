@@ -1,0 +1,13 @@
+version: '3.3'
+networks:
+  default:
+
+services:
+  service:
+    container_name: automations
+    build: .
+    image: automations
+    ports:
+      - 5000:5000
+    env_file:
+       - .env
