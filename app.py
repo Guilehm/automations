@@ -1,4 +1,8 @@
-print('App running')
+from flask import Flask
 
-while True:
-    pass
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
