@@ -3,7 +3,7 @@ networks:
   default:
 
 services:
-  service:
+  automator:
     container_name: automations
     build: .
     image: automations
