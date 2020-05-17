@@ -10,6 +10,7 @@ selenium = "*"
 requests = "*"
 ipython = "*"
 flask = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
