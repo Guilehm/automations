@@ -35,11 +35,11 @@ class CodCrawler:
         level = response.xpath(f'{progression_xpath}//div[@class="highlight-text"]/text()').get().strip()
         progression = response.xpath(f'{progression_xpath}//span[@class="progression"]//text()').get()
 
-        return (dict(
+        return dict(
             playTime=play_time,
             matches=matches,
             rankIcon=rank_icon,
             level=level,
             progression=progression,
-        ))
+        )
 
