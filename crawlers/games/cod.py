@@ -55,3 +55,12 @@ class CodCrawler(Cod):
             progression=progression,
         )
 
+
+class CodAPI(Cod):
+    def __init__(self, base_url=BASE_API_URL):
+        super().__init__(base_url)
+
+    def get_response(self, platform, username):
+        self._validate_request(platform, username)
+        self.response = self._response.json()
+        return self.response
