@@ -2,15 +2,18 @@ import requests
 from requests import RequestException
 from scrapy import Selector
 
-BASE_URL = 'https://cod.tracker.gg/warzone/profile/{platform}/{username}/overview'
+
+BASE_CRAWLER_URL = 'https://cod.tracker.gg/warzone/profile/{platform}/{username}/overview'
+BASE_API_URL = 'https://api.tracker.gg/api/v2/warzone/standard/profile/{platform}/{username}'
 
 
-class CodCrawler:
-    def __init__(self, base_url=BASE_URL):
+class Cod:
+    def __init__(self, base_url):
         self.base_url = base_url
+        self._response = None
         self.response = None
 
-    def get_response(self, platform, username):
+    def _validate_request(self, platform, username):
         url = self.base_url.format(
             platform=platform,
             username=username,
@@ -20,7 +23,16 @@ class CodCrawler:
             response.raise_for_status()
         except RequestException:
             raise
-        self.response = Selector(text=response.text)
+        self._response = response
+
+
+class CodCrawler(Cod):
+    def __init__(self, base_url=BASE_CRAWLER_URL):
+        super().__init__(base_url)
+
+    def get_response(self, platform, username):
+        self._validate_request(platform, username)
+        self.response = Selector(text=self._response.text)
         return self.response
 
     def _parse_overview_data(self):
