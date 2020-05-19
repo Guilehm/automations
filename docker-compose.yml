@@ -11,3 +11,9 @@ services:
       - 5000:5000
     env_file:
        - .env
+
+  mongo:
+    container_name: mongo_automations
+    image: mongo:3.4-jessie
+    ports:
+      - 27017:27017
