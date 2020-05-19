@@ -13,7 +13,7 @@ services:
        - .env
 
   mongo:
-    container_name: mongo_stocks
+    container_name: mongo_automations
     image: mongo:3.4-jessie
     ports:
       - 27017:27017
