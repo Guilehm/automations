@@ -4,7 +4,7 @@ from threading import Thread
 
 from flask import Flask
 
-from bots.pacino import client
+from bots.pacino import pacino
 
 app = Flask(__name__)
 
@@ -23,4 +23,4 @@ flask_thread = Thread(target=flask_partial_run)
 
 if __name__ == '__main__':
     flask_thread.start()
-    client.run(DISCORD_PACINO_TOKEN)
+    pacino.run(DISCORD_PACINO_TOKEN)
