@@ -1,16 +1,26 @@
-from discord.ext import commands
 import os
+
+import discord
 
 DISCORD_PACINO_TOKEN = os.getenv('DISCORD_PACINO_TOKEN')
 
 
-client = commands.Bot(command_prefix='!')
+class Pacino(discord.Client):
+    MAIN_QUOTE = 'Vaidade… Definitivamente é o meu pecado favorito!'
+
+    async def on_ready(self):
+        print(self.MAIN_QUOTE)
+
+    async def on_message(self, message):
+        if message.author == self.user:
+            return
+
+        if message.content.startswith('.ping'):
+            await message.channel.send(self.MAIN_QUOTE)
 
 
-@client.event
-async def on_ready():
-    print('Vaidade… Definitivamente é o meu pecado favorito!')
-
+pacino = Pacino()
 
 if __name__ == '__main__':
-    client.run(DISCORD_PACINO_TOKEN)
+    pacino = Pacino()
+    pacino.run(DISCORD_PACINO_TOKEN)
