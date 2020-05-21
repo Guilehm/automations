@@ -13,6 +13,7 @@ flask = "*"
 gunicorn = "*"
 scrapy = "*"
 pymongo = "*"
+discord-py = "*"
 
 [requires]
 python_version = "3.7"
