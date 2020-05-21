@@ -21,5 +21,9 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
 # set display port to avoid crash
 ENV DISPLAY=:99
-CMD ["gunicorn", "-c", "gunicorn_config.py", "wsgi:app"]
 
+# disabling gunicorn to test the bot
+#CMD ["gunicorn", "-c", "gunicorn_config.py", "wsgi:app"]
+
+# this line should be removed after the tests
+CMD python app.py
