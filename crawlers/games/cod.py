@@ -1,43 +1,12 @@
-import requests
-from requests import RequestException
 from scrapy import Selector
 
-from databases.mongo import get_db
-
+from crawlers.utils import BaseSpider
 
 BASE_CRAWLER_URL = 'https://cod.tracker.gg/warzone/profile/{platform}/{username}/overview'
 BASE_API_URL = 'https://api.tracker.gg/api/v2/warzone/standard/profile/{platform}/{username}'
-DB = get_db('cod')
 
 
-class Cod:
-    def __init__(self, base_url, db=DB):
-        self.base_url = base_url
-        self._response = None
-        self.response = None
-        self.db = db
-
-    def save_data(self, data, collection):
-        collection = self.db[collection]
-        many = not isinstance(data, dict) and len(data) > 1
-        if many:
-            return collection.insert_many(data)
-        return collection.insert_one(data)
-
-    def _validate_request(self, platform, username):
-        url = self.base_url.format(
-            platform=platform,
-            username=username,
-        )
-        response = requests.get(url)
-        try:
-            response.raise_for_status()
-        except RequestException:
-            raise
-        self._response = response
-
-
-class CodCrawler(Cod):
+class CodCrawler(BaseSpider):
     def __init__(self, base_url=BASE_CRAWLER_URL, *args, **kwargs):
         super().__init__(base_url, *args, **kwargs)
 
@@ -67,7 +36,7 @@ class CodCrawler(Cod):
         )
 
 
-class CodAPI(Cod):
+class CodAPI(BaseSpider):
     def __init__(self, base_url=BASE_API_URL, *args, **kwargs):
         super().__init__(base_url, *args, **kwargs)
 
