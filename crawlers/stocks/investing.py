@@ -36,9 +36,9 @@ class InvestingSpider(BaseSpider):
 
     def get_response(self, endpoint, force_update=False):
         url = f'{self.base_url}/{endpoint}'
-        self.url = url
         if self.response and self.url == url and not force_update:
             return self.response
+        self.url = url
         response = requests.get(url, headers=self._make_headers())
         try:
             response.raise_for_status()
