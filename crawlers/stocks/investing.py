@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import requests
 from requests import RequestException
 from scrapy import Selector
@@ -50,7 +52,16 @@ class InvestingSpider(BaseSpider):
         response = self.response
         name = response.xpath('//h1/text()').get('').strip()
         ticker = response.xpath('//meta[@itemprop="tickerSymbol"]/@content').get()
-        return dict(name=name, ticker=ticker)
+        # TODO: format value
+        value = response.xpath('//*[@id="last_last"]/text()').get()
+        time = datetime.utcnow() - timedelta(hours=3)
+        return dict(
+            name=name,
+            ticker=ticker,
+            value=value,
+            time=time.isoformat(),
+            timestamp=datetime.timestamp(time),
+        )
 
     def _get_overview_table_data(self):
         response = self.response
