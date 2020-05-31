@@ -60,6 +60,7 @@ class InvestingSpider(BaseSpider):
             ticker=ticker,
             value=value,
             time=time.isoformat(),
+            url=self.url,
             timestamp=datetime.timestamp(time),
         )
 
