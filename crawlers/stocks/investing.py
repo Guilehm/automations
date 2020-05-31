@@ -38,12 +38,12 @@ class InvestingSpider(BaseSpider):
         url = f'{self.base_url}/{endpoint}'
         if self.response and self.url == url and not force_update:
             return self.response
-        self.url = url
         response = requests.get(url, headers=self._make_headers())
         try:
             response.raise_for_status()
         except RequestException:
             raise
+        self.url = url
         self._response = response
         self.response = Selector(text=self._response.text)
         return self.response
