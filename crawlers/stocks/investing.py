@@ -60,8 +60,8 @@ class InvestingSpider(BaseSpider):
             ticker=ticker,
             value=value,
             time=time.isoformat(),
-            url=self.url,
             timestamp=datetime.timestamp(time),
+            url=self.url,
         )
 
     def _get_overview_table_data(self):
