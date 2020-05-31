@@ -1,3 +1,5 @@
+import requests
+from requests import RequestException
 from scrapy import Selector
 
 from crawlers.utils import BaseSpider
@@ -6,7 +8,21 @@ BASE_CRAWLER_URL = 'https://cod.tracker.gg/warzone/profile/{platform}/{username}
 BASE_API_URL = 'https://api.tracker.gg/api/v2/warzone/standard/profile/{platform}/{username}'
 
 
-class CodCrawler(BaseSpider):
+class Cod(BaseSpider):
+    def _validate_request(self, platform, username):
+        url = self.base_url.format(
+            platform=platform,
+            username=username,
+        )
+        response = requests.get(url)
+        try:
+            response.raise_for_status()
+        except RequestException:
+            raise
+        self._response = response
+
+
+class CodCrawler(Cod):
     def __init__(self, base_url=BASE_CRAWLER_URL, *args, **kwargs):
         super().__init__(base_url, *args, **kwargs)
 
@@ -36,7 +52,7 @@ class CodCrawler(BaseSpider):
         )
 
 
-class CodAPI(BaseSpider):
+class CodAPI(Cod):
     def __init__(self, base_url=BASE_API_URL, *args, **kwargs):
         super().__init__(base_url, *args, **kwargs)
 
