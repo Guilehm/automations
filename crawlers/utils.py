@@ -1,6 +1,3 @@
-import requests
-from requests import RequestException
-
 from databases.mongo import get_db
 
 
@@ -17,15 +14,3 @@ class BaseSpider:
         if many:
             return collection.insert_many(data)
         return collection.insert_one(data)
-
-    def _validate_request(self, platform, username):
-        url = self.base_url.format(
-            platform=platform,
-            username=username,
-        )
-        response = requests.get(url)
-        try:
-            response.raise_for_status()
-        except RequestException:
-            raise
-        self._response = response
