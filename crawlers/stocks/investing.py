@@ -28,7 +28,7 @@ class InvestingSpider(BaseSpider):
         for value in data:
             link = value.xpath('.//a')
             if link:
-                yield dict(title=link.xpath('.//text()').get(), href=link.attrib['href'])
+                yield dict(text=link.xpath('.//text()').get(), href=link.attrib['href'])
                 continue
             yield value.xpath('.//text()').get('')
 
